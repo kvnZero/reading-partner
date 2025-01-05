@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>伴读 - AI Content Assistant Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <h2>伴读 - AI Content Assistant 配置</h2>
+    <div class="description">
+      通过设定页面规则，角色预设，在已设定的规则页面上右下角出现对话悬浮按钮，点开后可以进行对话，可以对文章进行总结，做修改建议等功能。
+    </div>
+
+    <div class="tab-container">
+      <button class="tab-btn active" data-tab="ai-settings">AI设置</button>
+      <button class="tab-btn" data-tab="page-rules">页面规则</button>
+      <button class="tab-btn" data-tab="roles">角色管理</button>
+    </div>
+
+    <div class="tab-content active" id="ai-settings">
+      <h3>AI设置</h3>
+      <div class="form-group">
+        <label>选择AI模型提供方：</label>
+        <select id="ai-model-select">
+          <option value="doubao">豆包</option>
+          <option value="deepseek">DeepSeek</option>
+          <option value="kimi">Kimi</option>
+          <option value="gemini">Gemini</option>
+          <option value="openai">OpenAI</option>
+          <!-- <option value="openai">OpenAI</option>
+          <option value="claude">Claude</option>
+          <option value="gemini">Gemini</option> -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label>*模型：</label>
+        <input type="text" id="model" placeholder="输入模型名称" required>
+      </div>
+      <div class="form-group">
+        <label>*API密钥：</label>
+        <input type="text" id="api-key" placeholder="输入API密钥" required>
+      </div>
+      <div class="form-group">
+        <label>*采样温度</label>
+        <input type="number" step="0.1" min="0" id="temperature" value="1" required>
+      </div>
+      <button class="save-btn" id="save-ai-settings">保存设置</button>
+    </div>
+
+    <div class="tab-content" id="page-rules">
+      <h3>页面规则</h3>
+      <div class="section-header">
+        <h4>系统预设规则</h4>
+      </div>
+      <div class="rules-list default-rules"></div>
+      
+      <div class="section-header">
+        <h4>自定义规则</h4>
+        <button class="add-btn" id="add-rule">添加规则</button>
+      </div>
+      <div class="rules-list custom-rules"></div>
+      
+      <div class="rule-form" style="display: none;">
+        <div class="form-group">
+          <label>URL模式：</label>
+          <input type="text" id="url-pattern" placeholder="例如: example.com/write">
+        </div>
+        <div class="form-group">
+          <label>标题选择器：</label>
+          <input type="text" id="title-selector" placeholder="例如: .title-input">
+        </div>
+        <div class="form-group">
+          <label>内容选择器：</label>
+          <input type="text" id="content-selector" placeholder="例如: .content-editor">
+        </div>
+        <button class="save-btn" id="save-rule">保存规则</button>
+        <button class="cancel-btn" id="cancel-rule">取消</button>
+      </div>
+    </div>
+
+    <div class="tab-content" id="roles">
+      <h3>角色管理</h3>
+      <div class="section-header">
+        <h4>系统预设角色</h4>
+      </div>
+      <div class="roles-list default-roles"></div>
+      
+      <div class="section-header">
+        <h4>自定义角色</h4>
+        <button class="add-btn" id="add-role">添加角色</button>
+      </div>
+      <div class="roles-list custom-roles"></div>
+      
+      <div class="role-form" style="display: none;">
+        <div class="form-group">
+          <label>角色名称：</label>
+          <input type="text" id="role-name" placeholder="例如: 技术文章写手">
+        </div>
+        <div class="form-group">
+          <label>提示语：</label>
+          <textarea id="role-prompt" placeholder="输入角色提示语，你可以在提示语中手动拼接${title}和${content}，在对话的时候通过文本搜索进行替换传入API，如果不需要，则可以不拼接，系统默认拼接在提示语末端。"></textarea>
+        </div>
+        <button class="save-btn" id="save-role">保存角色</button>
+        <button class="cancel-btn" id="cancel-role">取消</button>
+      </div>
+    </div>
+
+    <hr>
+    <p>如果觉得好用请我喝杯咖啡吧，谢谢。作者主页：<a href="https://abigeater.com" target="_blank">Abigeater</a></p>
+    <img src="../assets/qrcode.png" class="qrcode" id="options-link" title="点击进入设置页面">
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html> 
