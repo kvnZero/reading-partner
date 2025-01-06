@@ -91,6 +91,41 @@ textarea {
   margin-bottom: 24px;
 }
 
+.quick-question-form {
+  margin-bottom: 24px;
+}
+
+.quick-questions-list {
+  margin-bottom: 24px;
+}
+
+.quick-question-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.quick-question-item.default {
+  background: #f8f9fa;
+}
+
+.quick-question-item.custom {
+  background: #e0f7fa;
+}
+
+.quick-question-item.custom .remove-question {
+  display: none;
+}
+
+.quick-question-item.default .remove-question {
+  display: none;
+}
+
+
 .rules-list, .roles-list {
   margin-bottom: 24px;
 }

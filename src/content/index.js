@@ -88,15 +88,21 @@ class ContentScript {
       </div>
       <div class="dialog-content">
         <div class="chat-messages"></div>
+        <div class="quick-questions-container">
+          <select class="quick-questions-panel">
+            <option value="" disabled selected>选择快捷提问...</option>
+          </select>
+        </div>
         <div class="input-area">
           <textarea placeholder="输入您的问题..."></textarea>
           <button class="send-btn">发送</button>
         </div>
+
         <div class="input-options">
-            <label class="history-checkbox">
-                <input type="checkbox" checked>
-                包含历史对话
-            </label>
+          <label class="history-checkbox">
+            <input type="checkbox" checked>
+            包含历史对话
+          </label>
         </div>
       </div>
     `;
@@ -135,6 +141,9 @@ class ContentScript {
 
     // 添加事件监听
     this.addDialogEventListeners(dialog);
+
+    // 在初始化角色选择器后添加
+    await this.initializeQuickQuestions();
   }
 
   addDialogEventListeners(dialog) {
@@ -181,6 +190,14 @@ class ContentScript {
     const includeHistory = this.chatDialog.querySelector('.history-checkbox input').checked;
 
     this.appendMessage('user', content);
+    // 添加加载状态消息
+    const loadingMessage = document.createElement('div');
+    loadingMessage.className = 'message assistant-message loading';
+    loadingMessage.innerHTML = '<div class="loading-dots"><span>.</span><span>.</span><span>.</span></div>';
+    const messagesContainer = this.chatDialog.querySelector('.chat-messages');
+    messagesContainer.appendChild(loadingMessage);
+
+
     textarea.value = '';
 
     try {
@@ -259,8 +276,12 @@ ${postContent}`;
         { role: 'assistant', content: response }
       );
       
+      // 移除加载状态消息
+      loadingMessage.remove();
+      
       this.appendMessage('assistant', response);
     } catch (error) {
+      loadingMessage.remove();
       this.appendMessage('error', `错误: ${error.message}`);
     }
   }
@@ -278,6 +299,34 @@ ${postContent}`;
     if (this.chatDialog) {
       this.chatDialog.style.display = 'flex';
     }
+  }
+
+  async initializeQuickQuestions() {
+    const { quickQuestions } = await chrome.storage.local.get('quickQuestions');
+    if (!quickQuestions) return;
+    
+    const panel = this.chatDialog.querySelector('.quick-questions-panel');
+    // 保留默认选项
+    panel.innerHTML = '<option value="" disabled selected>选择快捷提问...</option>';
+    
+    quickQuestions.forEach(question => {
+        const option = document.createElement('option');
+        option.value = question.question; // 直接使用问题内容作为值
+        option.textContent = question.question;
+        panel.appendChild(option);
+    });
+
+    // 添加 change 事件监听
+    panel.addEventListener('change', () => {
+        const selectedQuestion = panel.value;
+        if (selectedQuestion) {
+            const textarea = this.chatDialog.querySelector('textarea');
+            textarea.value = selectedQuestion;
+            this.handleSendMessage();
+            // 重置选择框到默认选项
+            panel.value = '';
+        }
+    });
   }
 }
 

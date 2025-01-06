@@ -10,6 +10,7 @@ class OptionsManager {
     await this.loadAISettings();
     await this.loadAndRenderRules();
     await this.loadAndRenderRoles();
+    await this.loadAndRenderQuickQuestions();
     this.initializeEventListeners();
   }
 
@@ -59,6 +60,33 @@ class OptionsManager {
     this.renderRolesList(customRoles, '.custom-roles', true);
   }
 
+  async loadAndRenderQuickQuestions() {
+    const { quickQuestions } = await chrome.storage.local.get('quickQuestions');
+    this.renderQuickQuestionsList(quickQuestions || [], '.quick-questions-list', true);
+  }
+
+  renderQuickQuestionsList(quickQuestions, containerSelector) {
+    const container = document.querySelector(containerSelector);
+    container.innerHTML = '';
+    
+    quickQuestions.forEach((question, index) => {
+        const div = document.createElement('div');
+        div.className = 'quick-question-item';
+        div.innerHTML = `
+            <span class="quick-question-text" data-id="${question.id}">${question.question}</span>
+            <button class="delete-btn" data-id="${question.id}">删除</button>
+        `;
+        container.appendChild(div);
+    });
+    container.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if(confirm('确定要删除吗？')) { 
+          await this.deleteQuickQuestion(btn.dataset.id);
+        }
+      });
+    });
+  }
+
   renderRulesList(rules, containerSelector, allowDelete) {
     const container = document.querySelector(containerSelector);
     container.innerHTML = '';
@@ -68,7 +96,7 @@ class OptionsManager {
       ruleElement.className = `rule-item ${rule.isDefault ? 'default' : ''}`;
       ruleElement.innerHTML = `
         <span>${rule.urlPattern} | ${rule.selectors.title} | ${rule.selectors.content}</span>
-        ${allowDelete ? `<button class="default-btn" data-url="${rule.urlPattern}">删除</button>` : ''}
+        ${allowDelete ? `<button class="delete-btn" data-id="${rule.id}">删除</button>` : ''}
       `;
       container.appendChild(ruleElement);
     });
@@ -252,6 +280,39 @@ class OptionsManager {
       await this.loadAndRenderRoles();
       this.showMessage('角色已保存', 'success');
     });
+
+    // 快捷提问
+    document.querySelector('#add-quick-question').addEventListener('click', () => {
+      document.querySelector('.quick-question-form').style.display = 'block';
+    });
+
+    document.querySelector('#cancel-quick-question').addEventListener('click', () => {
+      document.querySelector('.quick-question-form').style.display = 'none';
+    });
+
+    document.querySelector('#save-quick-question').addEventListener('click', async () => {
+      const quickQuestion = {
+        id: Date.now().toString(),
+        question: document.querySelector('#quick-question').value
+      };
+      await this.addQuickQuestion(quickQuestion);
+      document.querySelector('.quick-question-form').style.display = 'none';
+      document.querySelector('#quick-question').value = '';
+      document.querySelector('#quick-question').focus();
+      this.showMessage('快捷提问已保存', 'success');
+    });
+
+    document.querySelector('#quick-question').addEventListener('keyup', () => {
+      if(document.querySelector('#quick-question').value.length > 0) {
+        document.querySelector('#save-quick-question').disabled = false;
+      } else {
+        document.querySelector('#save-quick-question').disabled = true;
+      }
+    });
+
+    document.querySelector('#cancel-quick-question').addEventListener('click', () => {
+      document.querySelector('.quick-question-form').style.display = 'none';
+    });
   }
 
   async deleteRule(id) {
@@ -276,6 +337,24 @@ class OptionsManager {
     await chrome.storage.local.set({ roles: updatedRoles });
     await this.loadAndRenderRoles();
     this.showMessage('角色已设为默认', 'success');
+  }
+
+
+  async deleteQuickQuestion(id) {
+    const { quickQuestions } = await chrome.storage.local.get('quickQuestions');
+    const updatedQuickQuestions = quickQuestions.filter(question => question.id !== id);
+    await chrome.storage.local.set({ quickQuestions: updatedQuickQuestions });
+    await this.loadAndRenderQuickQuestions();
+    this.showMessage('快捷提问已删除', 'success');
+  }
+
+
+  async addQuickQuestion(newQuestion) {
+    const { quickQuestions } = await chrome.storage.local.get('quickQuestions');
+    const updatedQuickQuestions = [...(quickQuestions || []), newQuestion];
+    await chrome.storage.local.set({ quickQuestions: updatedQuickQuestions });
+    await this.loadAndRenderQuickQuestions();
+    this.showMessage('快捷提问已添加', 'success');
   }
 
   showMessage(message, type) {

@@ -16,6 +16,7 @@
       <button class="tab-btn active" data-tab="ai-settings">AI设置</button>
       <button class="tab-btn" data-tab="page-rules">页面规则</button>
       <button class="tab-btn" data-tab="roles">角色管理</button>
+      <button class="tab-btn" data-tab="quick-questions">快捷提问</button>
     </div>
 
     <div class="tab-content active" id="ai-settings">
@@ -109,6 +110,24 @@
 
       <div class="roles-list custom-roles"></div>
 
+    </div>
+
+    <div class="tab-content" id="quick-questions">
+      <h3>快捷提问列表</h3>
+      <div class="section-header">
+        <h4>自定义快捷提问</h4>
+        <button class="add-btn" id="add-quick-question">添加快捷提问</button>
+      </div>
+      
+      <div class="quick-question-form" style="display: none;">
+        <div class="form-group">
+          <label>快捷提问：</label>
+          <input type="text" id="quick-question" placeholder="例如: 技术文章写手">
+        </div>
+        <button class="save-btn" id="save-quick-question">保存快捷提问</button>
+        <button class="cancel-btn" id="cancel-quick-question">取消</button>
+      </div>
+      <div class="quick-questions-list custom-quick-questions"></div>
     </div>
 
     <hr>

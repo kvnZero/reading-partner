@@ -107,8 +107,7 @@
   }
 
   .input-area {
-    padding: 12px;
-    border-top: 1px solid #eee;
+    padding: 0px 12px 12px 12px;
     display: flex;
     gap: 8px;
     padding-bottom: 0;
@@ -135,4 +134,99 @@
 
   .send-btn:hover {
     background-color: #1557b0;
+  }
+
+  .quick-questions-panel {
+    padding: 12px 12px 0px 12px;
+  }
+  
+  .quick-question-btn {
+    border-top: 1px solid #eee;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f5f5f5;
+    color: #333;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .quick-question-btn:hover {
+    background: #e5e5e5;
+    border-color: #ccc;
+  }
+  
+  .loading-dots {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loading-dots span {
+      width: 4px;
+      height: 4px;
+      background: #666;
+      border-radius: 50%;
+      animation: loading 1.4s infinite;
+  }
+  
+  .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+  }
+  
+  .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+  }
+  
+  @keyframes loading {
+      0%, 100% {
+          opacity: 0.3;
+          transform: scale(0.8);
+      }
+      50% {
+          opacity: 1;
+          transform: scale(1.2);
+      }
+  }
+  
+  .message.loading {
+      opacity: 0.7;
+  }
+
+  .quick-questions-container {
+    padding: 12px 12px 4px 12px;
+    border-top: 1px solid #eee;
+  }
+
+  .quick-questions-panel {
+    width: 100%;
+    padding: 2px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .quick-questions-panel:hover {
+    border-color: #1a73e8;
+  }
+
+  .quick-questions-panel:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26,115,232,0.1);
+  }
+
+  .quick-questions-panel option {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .quick-questions-panel option:first-child {
+    color: #666;
   }
