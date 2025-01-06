@@ -1,6 +1,8 @@
 class OptionsManager {
   constructor() {
     this.currentTab = 'ai-settings';
+    this.syncRuleUrl = null;
+    this.syncRoleUrl = null;
   }
 
   async initialize() {
@@ -132,6 +134,36 @@ class OptionsManager {
       document.querySelector('.rule-form').style.display = 'block';
     });
 
+    document.querySelector('#sync-rule').addEventListener('click', () => {
+      if(this.syncRuleUrl) {
+        fetch(this.syncRuleUrl)
+          .then(response => {
+            let data = response.json();
+            data = data.filter(rule => rule.isDefault);
+            if(data.length > 0) {
+              chrome.storage.local.get('pageRules').then(async (oldRules) => {
+                oldRules.filter(rule => !rule.isDefault).forEach(rule => {
+                  data.push(rule);
+                });
+                chrome.storage.local.set({
+                  pageRules: data
+                }).then(() => {
+                  this.loadAndRenderRules();
+                  this.showMessage('同步规则成功', 'success');
+                });
+              });
+            } else {
+              this.showMessage('远程规则为空,不进行同步', 'error');
+            }
+          })
+          .catch(error => {
+            this.showMessage('同步规则失败', 'error');
+          });
+      } else {
+        this.showMessage('请先设置同步规则URL', 'error');
+      }
+    });
+
     document.querySelector('#cancel-rule').addEventListener('click', () => {
       document.querySelector('.rule-form').style.display = 'none';
     });
@@ -167,6 +199,36 @@ class OptionsManager {
 
     document.querySelector('#cancel-role').addEventListener('click', () => {
       document.querySelector('.role-form').style.display = 'none';
+    });
+
+    document.querySelector('#sync-role').addEventListener('click', () => {
+      if(this.syncRoleUrl) {
+        fetch(this.syncRoleUrl)
+          .then(response => {
+            let data = response.json();
+            data = data.filter(role => role.isDefault);
+            if(data.length > 0) {
+              chrome.storage.local.get('roles').then(async (oldRoles) => {
+                oldRoles.filter(role => !role.isDefault).forEach(role => {
+                  data.push(role);
+                });
+                chrome.storage.local.set({
+                  roles: data
+                }).then(() => {
+                  this.loadAndRenderRoles();
+                  this.showMessage('同步角色成功', 'success');
+                });
+              });
+            } else {
+              this.showMessage('远程角色为空,不进行同步', 'error');
+            }
+          })
+          .catch(error => {
+            this.showMessage('同步角色失败', 'error');
+          });
+      } else {
+        this.showMessage('请先设置同步角色URL', 'error');
+      }
     });
 
     document.querySelector('#save-role').addEventListener('click', async () => {

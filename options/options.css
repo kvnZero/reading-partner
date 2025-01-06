@@ -68,7 +68,7 @@ textarea {
   resize: vertical;
 }
 
-.save-btn, .add-btn {
+.save-btn, .add-btn, .sync-btn {
   background: #1a73e8;
   color: white;
   border: none;

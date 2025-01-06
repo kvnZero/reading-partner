@@ -1,0 +1,10 @@
+[
+    {
+      "urlPattern": "https://mp.weixin.qq.com/cgi-bin/appmsg.*?action=edit",
+      "selectors": {
+        "title": ".js_article_title",
+        "content": ".ProseMirror"
+      },
+      "isDefault": true
+    }
+]
