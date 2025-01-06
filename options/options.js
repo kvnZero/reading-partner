@@ -68,7 +68,7 @@ class OptionsManager {
       ruleElement.className = `rule-item ${rule.isDefault ? 'default' : ''}`;
       ruleElement.innerHTML = `
         <span>${rule.urlPattern} | ${rule.selectors.title} | ${rule.selectors.content}</span>
-        ${allowDelete ? `<button class="delete-btn" data-url="${rule.urlPattern}">删除</button>` : ''}
+        ${allowDelete ? `<button class="default-btn" data-url="${rule.urlPattern}">删除</button>` : ''}
       `;
       container.appendChild(ruleElement);
     });
@@ -93,8 +93,10 @@ class OptionsManager {
       roleElement.className = `role-item ${role.isDefault ? 'default' : ''}`;
       roleElement.innerHTML = `
         <span>${role.name} | ${role.prompt}</span>
-        ${allowDelete ? `<button class="delete-btn" data-id="${role.id}">删除</button>` : ''}
-        ${!role.isDefaultChecked ? `<button class="default-btn" data-id="${role.id}">设为默认</button>` : ''}
+        <div class="role-item-actions">
+          ${!role.isDefaultChecked ? `<button class="default-btn" data-id="${role.id}">设为默认</button>` : ''}
+          ${allowDelete ? `<button class="delete-btn" data-id="${role.id}">删除</button>` : ''}
+        </div>
       `;
       container.appendChild(roleElement);
     });

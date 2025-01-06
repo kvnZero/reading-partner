@@ -1,4 +1,7 @@
-<img src="icon.png" alt="伴读" width="100" style="display: block; margin: 0 auto;">
+<p align="center">
+  <img src="icon.png" alt="伴读" width="100"><br>
+</p>
+
 
 <h1 align="center">伴读 - AI Content Assistant</h1>
 
